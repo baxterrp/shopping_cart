@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <title>{{title}}</title>
+	   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	   	<link rel="stylesheet" href="../public/css/main.css" />
+	   	<script src="public/javascript/js.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class = "row drop-bottom">
+				<div class="col-lg-11">
+					<h1 class = "text-primary clearfix"><strong>{{h1}}</strong></h1>
+				</div>
+				{{#unless admin}}
+				<div class="col-lg-1 h3 move-shopping-cart">
+					<span><span id="cartCount">{{count}}</span> <span class="glyphicon glyphicon-shopping-cart gly-flip-horizontal"></span></span>
+				</div>
+				{{/unless}}
+			</div>
+			<div class="row">
+				{{>nav this}}
+				<div class="row">
+					<h2 class="h2 col-lg-12"><strong>{{h2}}</strong></h2>
+				</div>
+			</div>
+			{{{body}}}
+			<br />
+			<div class="row">
+				<hr class="col-lg-12" />
+			</div>
+			<footer>
+				<p class="text-center text-muted">Shopping Cart | &copy; Copyright 2016, All 	Rights Reserved</p>
+			</footer>
+		</div>
+	<script src="public/javascript/ajax.js"></script>
+	<script src="public/javascript/home.js"></script>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  </body>
+</html>

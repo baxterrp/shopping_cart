@@ -1,0 +1,84 @@
+
+		<div class="row">
+			<span class="col-lg-12 drop-bottom">This is the checkout page. If you want to make changes to your cart go back to the <a href="/view_cart" class="text-primary">view cart page</a> and edit your cart there.</span> 
+		</div>
+		<form class="drop-bottom">
+			<div class="row">
+				<div class="col-lg-3">
+					<div class="h4">
+						<p><strong>{{user.fname}} {{user.lname}}</strong></p>
+						<p><strong>{{user.address}}</strong></p>
+						<p><strong>{{user.city}}, {{user.state}} {{user.zip}}</strong></p>
+					</div>
+				</div>
+				<div class="col-lg-4 text-right">
+					<div class="row">
+						<div class="col-lg-12">
+							<label>Credit Card Number: </label>
+							<input type="text" class="drop-bottom" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<label>CCV Number: </label>
+							<input type="text" class="drop-bottom" />
+						</div>
+					</div>							
+					<div class="row">
+						<div class="col-lg-12">
+							<label>Expiration Date: </label>
+							<input type="text" class="drop-bottom" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-3">
+					<input type="button" class="btn btn-success" value="Complete Checkout" />
+				</div>
+			</div>
+		</form>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>Product Name</th>
+					<th>Price Each</th>
+					<th>Amount</th>
+					<th>Total Price</th>
+				</tr>
+			</thead>
+			<tbody >
+				<tr>
+					<td>Item 1</td>
+					<td>$350</td>
+					<td>1</td>
+					<td>$350</td>
+				</tr>				
+				<tr>
+					<td>Item 2</td>
+					<td>$150</td>
+					<td>2</td>
+					<td>$300</td>
+				</tr>				
+				<tr>
+					<td>Item 3</td>
+					<td>$200</td>
+					<td>1</td>
+					<td>$200</td>
+				</tr>				
+				<tr>
+					<td>Item 4</td>
+					<td>$250</td>
+					<td>1</td>
+					<td>$250</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+					<td><strong>Grand Total</strong></td>
+					<td>$1100</td>
+				</tr>
+			</tfoot>
+		</table>
+	

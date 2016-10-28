@@ -1,0 +1,14 @@
+{
+  "name": "ShoppingCart",
+  "version": "1.0.0",
+  "description": "Shopping Cart Project",
+  "author": "Robert Baxter",
+  "license": "ISC",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "4.14.0",
+    "express-handlebars": "3.0.0"
+  }
+}

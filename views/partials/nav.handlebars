@@ -1,0 +1,19 @@
+<nav class = "col-lg-12 navbar navbar-default">
+	<ul class="navbar-nav nav">
+	{{#if admin}}
+		<li><a href="/admin">Home</a></li>
+		<li><a href="/admin/add_product">Add Product</a></li>
+		<li><a href="/admin/update">Update Product(s)</a></li>
+		<li><a href="/admin/add_group">Add Group</a></li>
+		<li><a href="/admin/orders">Check Customer Orders</a></li>
+		<li><a href="#">Logout</a></li>
+	{{else}}
+		<li><a href="/">Home</a></li>
+		<li><a href="/view_cart">View Cart</a></li>
+		<li><a href="/checkout">Checkout</a></li>
+		{{#if logged}}
+			<li><a href="/logout">Logout</a></li>
+		{{/if}}
+	{{/if}}
+	</ul>
+</nav>
