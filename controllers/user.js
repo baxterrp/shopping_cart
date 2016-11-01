@@ -57,39 +57,58 @@ module.exports = {
 	updateCart : function(req, res){
 		var data = req.body.data.split(',');
 
-		//update cart count
-		var count = req.session.count;
-		var thisCount = parseInt(data[1]);
-		count += thisCount;
-		req.session.count = count;
-		count += "";
+		products.findOne({_id: data[0]}, function(err, product){
+			
+			if(data[2] == 'undefined'){
+				var update = false;
+			}else if(data[2] == 'true'){
+				var update = true;
+			}					
+			//update cart information in session
+			//use flag for do while loop
+			var flag = true;
+			var len = req.session.cart.length;
+			var difference = 1;
 
-		//update cart information in session
-		//use flag for do while loop
-		var flag = true;
-		var len = req.session.cart.length;
+			do{
+				for(var i = 0; i < len; i++){
+					//if it's an update - get difference
+					if(update)
+						difference = parseInt(data[1]) - req.session.cart[i].quantity;
 
-		do{
-			for(var i = 0; i < len; i++){
-				//if this item is in cart, update quantity;;;
-				if(req.session.cart[i].id == data[0]){
-					console.log(req.session.cart[i].id);
-					console.log(data[0]);
-					req.session.cart[i].count++;
+					if(req.session.cart[i].id == data[0]){
+						req.session.cart[i].quantity+=difference;
+						req.session.count += difference;
+						req.session.cart[i].total = (req.session.cart[i].quantity * parseFloat(req.session.cart[i].price)).toFixed(2);
+						flag = false;
+						if(req.session.cart[i].quantity == 0){
+							req.session.cart.splice(i, 1);
+							len = req.session.cart.length;
+						}
+					}
+				}
+				//if not add it
+				if(flag){
+					req.session.cart.push({id: data[0], quantity: 1, name: product.name, price: product.price, image: product.image, total: parseFloat(product.price).toFixed(2)});
+					req.session.count++;
 					flag = false;
 				}
-			}
-			//if not add it
-			if(flag){
-				req.session.cart.push({id: data[0], count: thisCount});
-				console.log(data[0]);
-				flag = false;
-			}
-		}while(flag);
+			}while(flag);
 
-		console.log(req.session.cart);
-		res.send(count);
+			req.session.grand = 0;
+			for(var i = 0; i < req.session.cart.length; i++){
+				req.session.grand += parseFloat(req.session.cart[i].total);
+			}
+
+			req.session.grand = req.session.grand.toFixed(2);
+			var count = req.session.count + "";
+			var output = count + '^^^' + JSON.stringify(req.session.cart);
+
+			res.send(output);
+		});
 	},
+
+
 
 	//registration page
 	register : function(req, res){
@@ -168,10 +187,16 @@ module.exports = {
 
 	//view shopping cart page
 	cart : function(req, res){
+		var showCart = false;
+
 		if(req.session.success == 'guest'){
-			res.render('cart', {title: 'Shopping Cart - View Cart', h1: 'Shopping Cart - View Cart', h2: 'View Cart', admin: false, count: req.session.count});
+			if(req.session.count > 0)
+				showCart = true;
+			res.render('cart', {showCart: showCart, title: 'Shopping Cart - View Cart', h1: 'Shopping Cart - View Cart', h2: 'View Cart', admin: false, count: req.session.count, cart: req.session.cart});
 		}else if(req.session.success == 'user'){
-			res.render('cart', {title: 'Shopping Cart - View Cart', h1: 'Shopping Cart - View Cart', h2: 'View Cart', admin: false, count: req.session.count, logged: true});
+			if(req.session.count > 0)
+				showCart = true;
+			res.render('cart', {showCart: showCart, title: 'Shopping Cart - View Cart', h1: 'Shopping Cart - View Cart', h2: 'View Cart', admin: false, count: req.session.count, cart: req.session.cart, logged: true});
 		}else{req.session.regenerate(function(err){
 			if(err){
 				console.log(err);
@@ -186,8 +211,12 @@ module.exports = {
 
 	//view checkout page
 	checkout : function(req, res){
+		var showCart = false;
 		if(req.session.success == "user"){
-			res.render('checkout', {user: req.session.user, title: 'Shopping Cart - Checkout', h1: 'Shopping Cart - Checkout', h2: 'Checkout', admin: false, count: req.session.count, logged: true});
+			if(req.session.count > 0){
+				showCart = true;
+			}
+			res.render('checkout', {showCart: showCart, user: req.session.user, cart: req.session.cart, grand: req.session.grand, title: 'Shopping Cart - Checkout', h1: 'Shopping Cart - Checkout', h2: 'Checkout', admin: false, count: req.session.count, logged: true});
 		}else{
 			res.redirect('/login');
 		}

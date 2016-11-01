@@ -2,6 +2,7 @@
 		<div class="row">
 			<span class="col-lg-12 drop-bottom">This is the checkout page. If you want to make changes to your cart go back to the <a href="/view_cart" class="text-primary">view cart page</a> and edit your cart there.</span> 
 		</div>
+		{{#if showCart}}
 		<form class="drop-bottom">
 			<div class="row">
 				<div class="col-lg-3">
@@ -48,37 +49,24 @@
 				</tr>
 			</thead>
 			<tbody >
+			{{#each cart}}
 				<tr>
-					<td>Item 1</td>
-					<td>$350</td>
-					<td>1</td>
-					<td>$350</td>
+					<td>{{name}}</td>
+					<td>${{price}}</td>
+					<td>{{quantity}}</td>
+					<td>${{total}}</td>
 				</tr>				
-				<tr>
-					<td>Item 2</td>
-					<td>$150</td>
-					<td>2</td>
-					<td>$300</td>
-				</tr>				
-				<tr>
-					<td>Item 3</td>
-					<td>$200</td>
-					<td>1</td>
-					<td>$200</td>
-				</tr>				
-				<tr>
-					<td>Item 4</td>
-					<td>$250</td>
-					<td>1</td>
-					<td>$250</td>
-				</tr>
+			{{/each}}
 			</tbody>
 			<tfoot>
 				<tr>
 					<td colspan="2">&nbsp;</td>
 					<td><strong>Grand Total</strong></td>
-					<td>$1100</td>
+					<td>${{grand}}</td>
 				</tr>
 			</tfoot>
 		</table>
+	{{else}}
+		<p>There are no items in your cart</p>
+	{{/if}}
 	

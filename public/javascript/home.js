@@ -22,10 +22,11 @@ if(document.getElementById("home_page")){
 		addToCart.updateButton.addEventListener('click', function(e){
 			if(e.target.type == 'button' && e.target.className == "btn btn-success addToCart"){
 				
-				var thisID = e.target.id + ',' + 1;
+				var thisID = e.target.id + ',1';
 
 				Ajax.sendRequest('/updateCart', function(res){
-					addToCart.myCart.innerHTML = res.responseText;
+					var updateCount = res.responseText.split('^^^');
+					addToCart.myCart.innerHTML = updateCount[0];
 				}, thisID);}
 			}, false);
 	}

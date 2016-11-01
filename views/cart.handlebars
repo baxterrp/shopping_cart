@@ -1,35 +1,40 @@
 <div class="row">
 	<span class="col-lg-12 drop-bottom">To remove an item form your cart, set the amount to zero and click the "update" button.</span> 
 </div>
-<div id="cartTable">	
-	<div class="row drop-bottom">
-		<div class="col-lg-12 checkOut">
-			<input type="button" class="btn btn-success" value="Check Out" onclick="window.location.href='/checkout'"/>
+{{#if showCart}}
+	<div id="cartTable">	
+		<div class="row drop-bottom">
+			<div class="col-lg-12 checkOut">
+				<input type="button" class="btn btn-success" value="Check Out" onclick="window.location.href='/checkout'"/>
+			</div>
 		</div>
-	</div>
 	<div class="row">
 		<div class="col-lg-12">
 			<table class='table-bordered table-striped table'>
+				<thead><tr>
+					<th>Image</th>
+					<th>Product Name</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Description</th>
+					<th>Udate</th></tr>
+				</thead>
 				<tbody>
-					<thead>
+				{{#each cart}}
 					<tr>
-						<th>Image</th>
-						<th>Product Name</th>
-						<th>Price</th>
-						<th>Quantity</th>
-						<th>Description</th>
-						<th>Udate</th></tr>
-					</thead>
-					<tr>
-						<td><image src = '../public/images/fruits/apple.jpg' width = '96' /></td>
-						<td>Apple</td>
-						<td>$.99</td>
-						<td class='set-width'><input id = "{{id}}" type='text' class='form-control' 	value="1" /></td>
+						<td><image src = {{image}} width = '96' /></td>
+						<td>{{name}}</td>
+						<td>${{price}}</td>
+						<td class='set-width'><input id = "{{id}}" type='text' class='form-control' value="{{quantity}}" /></td>
 						<td><input type='button' class='btn btn-primary' value='Description' /></td>
 						<td><input type='button' name="{{id}}" class='btn btn-success update_cart' value='Update' /></td>
 					</tr>
+				{{/each}}
 				</tbody>
 			</table>
 		</div>
 	</div>
 </div>
+{{else}}
+	<p>There are no items in your cart</p>
+{{/if}}
