@@ -12,9 +12,17 @@ transform: scale(-1, 1);}
   
   /*create gap between header and nav*/
   .drop-bottom{margin-bottom: 15px;}
-  
   /*set width on text box*/
   .set-width{width:125px;}
   
   /*set red*/
   .red{color: red;}
+
+  .modal{margin-top: 150px;}
+  .modal-header{color: white;}
+  .modal-header{background-color: #4285F4;}
+  .modal-content{border: 1px solid #4285F4;}
+  .modal-body img{float: left; margin-right: 25px;}
+  .modal-body h4{color: green;}
+  #modal-button{float: left;}
+  .modal-footer{clear: both; border-top: none;}

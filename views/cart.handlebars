@@ -26,7 +26,7 @@
 						<td>{{name}}</td>
 						<td>${{price}}</td>
 						<td class='set-width'><input id = "{{id}}" type='text' class='form-control' value="{{quantity}}" /></td>
-						<td><input type='button' class='btn btn-primary' value='Description' /></td>
+						<td><a href='#description' data-toggle='modal' data-backdrop='false'><input id='test' type='button' class='btn btn-primary' value='Description' /></td></a>
 						<td><input type='button' name="{{id}}" class='btn btn-success update_cart' value='Update' /></td>
 					</tr>
 				{{/each}}

@@ -1,8 +1,11 @@
-<form>
+<form method="post" action="/addProduct" id="addProduct">
 	<div class="row">
 		<div class="col-lg-5">
-			<select class="form-control drop-bottom" name="groupName" >
+			<select class="form-control drop-bottom" name="groupName" id="groupName">
 				<option>Please Select a Product Group</option>
+				{{#each groups}}
+					<option id={{id}}>{{name}}</option>
+				{{/each}}
 			</select>
 		</div>
 	</div>
@@ -10,7 +13,7 @@
 		<div class="col-lg-6">
 			<div class="form-group">
 			  <label>Product Name:</label>
-			  <input type="text" class="form-control" name="productName">
+			  <input type="text" class="form-control" name="name" id="name">
 			</div>
 		</div>
 	</div>
@@ -18,25 +21,25 @@
 	<div class="col-lg-6">
 		<div class="form-group">
 			<label>Product price:</label>
-			<input type="text" class="form-control" name="price">
+			<input type="text" class="form-control" name="price" id="price">
 		</div>
 	</div>
 	</div>
 	<div class="row">
 		<div class="col-lg-6 drop-bottom">
 			<label>Product Image: </label>
-			<input type="file" class="form-control" name="image" />
+			<input type="file" class="form-control" name="file" id="file" />
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-lg-6 drop-bottom">
 			<label>Product Description</label>
-			<textarea class="form-control" rows="4" name="description"></textarea>
+			<textarea class="form-control" rows="4" name="description" id="description"></textarea>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-lg-6">
-			<input type="submit" value="Add Product" class="btn btn-success" />
+			<input type="button" value="Add Product" class="btn btn-success" id="submitProduct" />
 		</div>
 	</div>
 </form>

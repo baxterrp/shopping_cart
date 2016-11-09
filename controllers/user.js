@@ -25,7 +25,7 @@ module.exports = {
 			}
 	})},
 
-	create_table : function(req, res){
+	createTable : function(req, res){
 		var groupId = req.body.data;
 		
 		if(groupId === "0"){
@@ -42,7 +42,7 @@ module.exports = {
 						output = "There are no items in this category";
 					}else{
 						for(var i = 0; i < myItems.length; i++){
-							output += "<tr><td><image src = " + myItems[i].image + " width = '96' /></td><td>" + myItems[i].name + "</td><td>$" + myItems[i].price + "</td><td><input id='test' type='button' class='btn btn-primary' value='Description' /></td><td><input type='button' class='btn btn-success addToCart' id ='" + myItems[i].id + "'" + "value='Add to Cart' /></td></tr>";
+							output += "<tr><td><image src = " + myItems[i].image + " width = '96' /></td><td>" + myItems[i].name + "</td><td>$" + myItems[i].price + "</td><td><a href='#description' data-toggle='modal' data-backdrop='false'><input id='test' type='button' class='btn btn-primary' value='Description' /></td></a><td><input type='button' class='btn btn-success addToCart' id ='" + myItems[i].id + "'" + "value='Add to Cart' /></td></tr>";
 						}
 						
 						output += "</tbody>";
@@ -142,7 +142,8 @@ module.exports = {
 			zip: req.body.zip,
 			phone: req.body.phone,
 			name: req.body.email,
-			password: req.body.password
+			password: req.body.password,
+			admin: false
 		});
 
 		newUser.save(function(err){

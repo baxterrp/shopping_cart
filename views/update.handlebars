@@ -5,6 +5,9 @@
 	<div class="col-lg-6 drop-bottom">
 		<select class="form-control" id="update_products">
 			<option value = "0">Please Select a Product Group</option>
+			{{#each groups}}
+				<option id={{id}}>{{name}}</option>
+			{{/each}}
 		</select>
 	</div>
 </div>

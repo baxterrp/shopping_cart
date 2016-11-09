@@ -22,7 +22,7 @@ if(document.getElementById("cartTable")){
 					}else{
 						var output = '<div class="row drop-bottom"><div class="col-lg-12 checkOut"><input type="button" class="btn btn-success" value="Check Out" onclick="window.location.href=\'/checkout\'"/></div></div><div class="row"><div class="col-lg-12"><table class="table-bordered table-striped table"><thead><tr><th>Image</th><th>Product Name</th><th>Price</th><th>Quantity</th><th>Description</th><th>Update</th></tr></thead><tbody>';
 						for(var i = 0; i < myCart.length; i++){
-							output += '<tr><td><image src = ' + myCart[i].image + ' width = \'96\' /></td><td>' + myCart[i].name + '</td><td>$' + myCart[i].price + '</td><td class=\'set-width\'><input id = "' + myCart[i].id + '" type=\'text\' class=\'form-control\' value="'+ myCart[i].quantity + '" /></td><td><input type=\'button\' class=\'btn btn-primary\' value=\'Description\' /></td><td><input type=\'button\' name="' + myCart[i].id + '" class=\'btn btn-success update_cart\' value=\'Update\' /></td></tr>';
+							output += '<tr><td><image src = ' + myCart[i].image + ' width = \'96\' /></td><td>' + myCart[i].name + '</td><td>$' + myCart[i].price + '</td><td class=\'set-width\'><input id = "' + myCart[i].id + '" type=\'text\' class=\'form-control\' value="'+ myCart[i].quantity + '" /></td><td><a href=\'#description\' data-toggle=\'modal\' data-backdrop=\'false\'><input id=\'test\' type=\'button\' class=\'btn btn-primary\' value=\'Description\' /></td></a><td><input type=\'button\' name="' + myCart[i].id + '" class=\'btn btn-success update_cart\' value=\'Update\' /></td></tr>';
 						}
 						output += '</tbody></table></div></div>';
 					}
