@@ -1,6 +1,7 @@
 var groups = require('../models').Groups,
 	users = require('../models').Users,
-	products = require('../models').Products;
+	products = require('../models').Products,
+	orders = require('../models').Orders;
 
 module.exports = {
 	
@@ -36,13 +37,14 @@ module.exports = {
 			groups.findOne({_id: groupId}, function(err, myGroup){
 				products.find({group: myGroup.name}, function(err, myItems){
 								
-					var output = "<table class='table-bordered table-striped table'><thead><tr><th>Image</th><th>Product Name</th><th>Price</th><th>Description</th><th>Add to Cart</th></tr></thead><tbody>";
+					var output = "<table id='productTable' class='table-bordered table-striped table'>";
+					output += "<thead><tr><th>Image</th><th>Product Name</th><th>Price</th><th>Description</th><th>Add to Cart</th></tr></thead><tbody>";
 					
 					if(myItems.length === 0){
 						output = "There are no items in this category";
 					}else{
 						for(var i = 0; i < myItems.length; i++){
-							output += "<tr><td><image src = " + myItems[i].image + " width = '96' /></td><td>" + myItems[i].name + "</td><td>$" + myItems[i].price + "</td><td><a href='#description' data-toggle='modal' data-backdrop='false'><input id='test' type='button' class='btn btn-primary' value='Description' /></td></a><td><input type='button' class='btn btn-success addToCart' id ='" + myItems[i].id + "'" + "value='Add to Cart' /></td></tr>";
+							output += "<tr><td><image src = " + myItems[i].image + " width = '96' /></td><td>" + myItems[i].name + "</td><td>$" + myItems[i].price + "</td><td><input type='button' class='btn btn-primary' value='Description' /></td><td><input type='button' class='btn btn-success addToCart' id ='" + myItems[i].id + "'" + "value='Add to Cart' /></td></tr>";
 						}
 						
 						output += "</tbody>";
@@ -134,16 +136,16 @@ module.exports = {
 	registerUser : function(req, res){
 
 		var newUser = users({
+			name: req.body.email,
+			password: req.body.password,
+			isAdmin: false,
 			fname: req.body.fname,
 			lname: req.body.lname,
 			address: req.body.address,
 			city: req.body.city,
 			state: req.body.state,
 			zip: req.body.zip,
-			phone: req.body.phone,
-			name: req.body.email,
-			password: req.body.password,
-			admin: false
+			phone: req.body.phone
 		});
 
 		newUser.save(function(err){
@@ -210,6 +212,16 @@ module.exports = {
 		}
 	},
 
+	getDescriptionBox : function(req, res){
+		var id = req.body.data;
+
+		products.findById(id, function(err, product){
+			var output = product.name + '^^^' + product.image + '^^^' + product.price + '^^^' + product.description;
+
+			res.send(output);
+		});
+	},
+
 	//view checkout page
 	checkout : function(req, res){
 		var showCart = false;
@@ -220,6 +232,48 @@ module.exports = {
 			res.render('checkout', {showCart: showCart, user: req.session.user, cart: req.session.cart, grand: req.session.grand, title: 'Shopping Cart - Checkout', h1: 'Shopping Cart - Checkout', h2: 'Checkout', admin: false, count: req.session.count, logged: true});
 		}else{
 			res.redirect('/login');
+		}
+	},
+
+	thank_you : function(req, res){
+		if(req.session.success == "user"){
+			var len = req.session.cart.length;
+
+			var prodArr = [];
+
+			for(var i = 0; i < len; i++){
+				var newItem = {
+					name: req.session.cart[i].name,
+					itemId: req.session.cart[i].id,
+					itemCount: req.session.cart[i].quantity,
+					price: req.session.cart[i].price
+				}
+				prodArr.push(newItem);
+			}
+
+			var newOrder = orders({
+				customer: req.session.user.id,
+				timeStamp: Date.now(),
+				productArr: prodArr
+			});
+
+			newOrder.save(function(err){
+				if(err){
+					console.log(err);
+				}else{
+					console.log("saving order");
+					req.session.destroy(function(err){
+						if(err){
+							console.log(err);
+						}else{
+							var count = 0;
+							res.render('thank_you', {count: count, title: 'Shopping Cart - Order Complete', h1: 'Shopping Cart - Order Complete', h2: 'Thank you! For your order!'})
+						}
+					});
+				}
+			});
+		}else{
+			res.redirect('/');
 		}
 	}
 }

@@ -2,5 +2,6 @@
 module.exports = {
 	'Groups':require('./groups'),
 	'Users':require('./users'),
-	'Products':require('./products')
+	'Products':require('./products'),
+	'Orders':require('./orders')
 };

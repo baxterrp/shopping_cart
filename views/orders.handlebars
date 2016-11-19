@@ -6,6 +6,9 @@
 			<div class="col-lg-6">
 				<select class="form-control drop-bottom">
 					<option value = "0">Select a Customer</option>
+					{{#each users}}
+						<option value = "{{id}}">{{lname}}, {{fname}}</option>
+					{{/each}}
 				</select>
 			</div>
 		</div>

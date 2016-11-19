@@ -34,32 +34,14 @@
 				<p class="text-center text-muted">Shopping Cart | &copy; Copyright 2016, All 	Rights Reserved</p>
 			</footer>
 		</div>
-	<div class="modal" id="description" roll="dialog" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header primary">
-					<p>Description</p>
-				</div>
-				<div class="modal-body">
-					<img src='../public/images/fruits/apple.jpg'/>
-					<h2>Apple</h2>
-					<h4>Price $0.49</h4>
-					<p>A sweet and tasty snack</p>
-				</div>
-				<div class="modal-footer">
-					<a class="btn btn-primary" id="modal-button" data-dismiss="modal">Okay</a>
-				</div>
-			</div>
-		</div>
-	</div>
+		
+	<div id="descriptionBox" class="hide container"></div>
 	{{#unless admin}}
 		<script src="public/javascript/ajax.js"></script>
 		<script src="public/javascript/home.js"></script>
-		<script src="public/javascript/cart.js"></script>
 	{{else}}
 		<script src="../public/javascript/ajax.js"></script>
-		<script src="../public/javascript/addProduct.js"></script>
-		<script src="../public/javascript/updateProduct.js"></script>
+		<script src="../public/javascript/adminProducts.js"></script>
 	{{/unless}}
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>

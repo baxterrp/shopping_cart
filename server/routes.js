@@ -14,6 +14,7 @@ module.exports = function(app){
 	router.get('/checkout', user.checkout);
 	router.get('/register', user.register);
 	router.get('/logout', user.logout);
+	router.get('/thank_you', user.thank_you);
 
 
 	//user POST
@@ -21,6 +22,7 @@ module.exports = function(app){
 	router.post('/register', user.registerUser);
 	router.post('/create_table', user.createTable);
 	router.post('/updateCart', user.updateCart);
+	router.post('/getDescriptionBox', user.getDescriptionBox);
 
 
 	//admin
@@ -37,6 +39,11 @@ module.exports = function(app){
 	router.post('/admin/login', admin.loginAdmin);
 	router.post('/createUpdateTable', admin.createUpdateTable);
 	router.post('/addProduct', multer({dest:'./public/images/'}).single('file'), admin.addProduct);
+	router.post('/updateProdsWithImage', multer({dest:'./public/images/'}).single('file'), admin.updateProdsWithImage);
+	router.post('/updateProdsNoImage', admin.updateProdsNoImage);
+	router.post('/admin/add_group', admin.addGroupPost);
+	router.post('/admin/returnOrderTable', admin.returnOrderTable);
+	router.post('/admin/getOrderBox', admin.getOrderBox);
 
 	app.use(router);
 }

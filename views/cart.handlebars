@@ -1,5 +1,5 @@
 <div class="row">
-	<span class="col-lg-12 drop-bottom">To remove an item form your cart, set the amount to zero and click the "update" button.</span> 
+	<span class="col-lg-12 drop-bottom">To remove an item from your cart, set the amount to zero and click the "update" button.</span> 
 </div>
 {{#if showCart}}
 	<div id="cartTable">	
@@ -10,7 +10,7 @@
 		</div>
 	<div class="row">
 		<div class="col-lg-12">
-			<table class='table-bordered table-striped table'>
+			<table id="productTable" class='table-bordered table-striped table'>
 				<thead><tr>
 					<th>Image</th>
 					<th>Product Name</th>
@@ -26,8 +26,8 @@
 						<td>{{name}}</td>
 						<td>${{price}}</td>
 						<td class='set-width'><input id = "{{id}}" type='text' class='form-control' value="{{quantity}}" /></td>
-						<td><a href='#description' data-toggle='modal' data-backdrop='false'><input id='test' type='button' class='btn btn-primary' value='Description' /></td></a>
-						<td><input type='button' name="{{id}}" class='btn btn-success update_cart' value='Update' /></td>
+						<td><input type='button' class='btn btn-primary' value='Description' /></td>
+						<td><input type='button' id="{{id}}" name="{{id}}" class='btn btn-success update_cart' value='Update' /></td>
 					</tr>
 				{{/each}}
 				</tbody>

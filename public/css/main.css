@@ -18,11 +18,9 @@ transform: scale(-1, 1);}
   /*set red*/
   .red{color: red;}
 
-  .modal{margin-top: 150px;}
-  .modal-header{color: white;}
-  .modal-header{background-color: #4285F4;}
-  .modal-content{border: 1px solid #4285F4;}
-  .modal-body img{float: left; margin-right: 25px;}
-  .modal-body h4{color: green;}
-  #modal-button{float: left;}
-  .modal-footer{clear: both; border-top: none;}
+/*description box*/
+#descriptionBox{overflow: hidden; border: 1px solid #4285F4; padding: 0 15px 15px 15px; background-color: #fff; border-radius: 5px; width: 50%; position: fixed; top: 200px; left: 0; right: 0; margin-left: auto; margin-right: auto;}
+#descriptionBox img{width: 300px;}
+
+.hide{display: none;}
+.show{display: block;}

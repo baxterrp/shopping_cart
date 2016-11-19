@@ -1,6 +1,7 @@
 var groups = require('../models').Groups,
 	users = require('../models').Users,
 	products = require('../models').Products,
+	orders = require('../models').Orders,
 	fs = require('fs');
 
 module.exports = {
@@ -22,7 +23,7 @@ module.exports = {
 	},
 
 	loginAdmin : function(req, res){
-		users.findOne({name: req.body.email, password: req.body.password, admin: true}, function(err, user){
+		users.findOne({name: req.body.email, password: req.body.password, isAdmin: true}, function(err, user){
 			if(err){
 				console.log("Invalid Admin Login");
 			}else if(user){
@@ -136,6 +137,63 @@ module.exports = {
 		});
 	},
 
+	updateProdsNoImage : function(req, res){
+		var documentData = {};
+		var response = req.body.data.split('^^^');
+		var productInfo = JSON.parse(response[0]);
+		var productId = response[1];
+
+		products.findById(productId, function(err, product){
+			if(err){
+				console.log(err);
+			}else if(product){
+				product.name = productInfo.name;
+				product.price = productInfo.price;
+				product.description = productInfo.description;
+				product.group = productInfo.group;
+
+				product.save(function(err){
+					if(err) throw err;
+
+					console.log("successfully updated");
+				});
+			}
+		});
+	},
+
+	updateProdsWithImage : function(req, res){
+		var prodId = req.body.prodId;
+		if(req.file.mimetype === 'image/jpeg' || req.file.mimetype === 'image/png'){
+			fs.rename('./public/images/' + req.file.filename, './public/images/' + req.body.group + '/' + req.file.filename + '.jpg', function(err){
+				products.findById(prodId, function(err, product){
+					if(err){
+						console.log(err);
+					}else if(product){
+						var path = '/public/images/' + product.group + '/' + product.image;
+						fs.unlink(path, function(err){
+							if(err){
+								console.log(err);
+							}else{
+								console.log("image removed");
+							}
+						});
+						product.name = req.body.name;
+						product.price = req.body.price;
+						product.group = req.body.group;
+						product.description = req.body.description;
+						product.image = '/public/images/' + req.body.group + '/' + req.file.filename + '.jpg';
+
+						product.save(function(err){
+							if(err) throw err;
+
+							console.log("successfully updated with image");
+						});
+					}
+				});
+			});
+		}
+	},
+
 
 
 	addGroup : function(req, res){
@@ -146,12 +204,67 @@ module.exports = {
 		}
 	},
 
+	addGroupPost: function(req, res){
+				
+		var group = req.body.group,
+			folder = req.body.folder;
+			
+		var newGroup = new groups({
+			name: group
+		});
+		
+		console.log(group + folder);
+		newGroup.save(function(err){
+			if(err){
+				console.log(err);
+			}else{
+				console.log("new group added");
+			}
+		});
+		
+		var newDirectory = "public/images/" + folder;
+			
+		fs.mkdir(newDirectory, function(err){
+			if(err){
+				console.log(err);
+			}
+			else{
+				console.log('Directory Made');
+			}
+		});
+
+		res.redirect('/admin')
+	},
+
 	orders : function(req, res){
 		if(req.session.success == 'admin'){
-			res.render('orders', {title: 'Shopping Cart - Admin View Customers', h1: 'Shopping Cart - Admin View Customers', h2: 'View Customers', admin: true, adminLogged: true});
+			users.find({isAdmin: false}, function(err, users){
+				res.render('orders', {users: users, title: 'Shopping Cart - Admin View Customers', h1: 'Shopping Cart - Admin View Customers', h2: 'View Customers', admin: true, adminLogged: true});
+			});
+			
 		}else{
 			res.redirect('/admin/login');
 		}
+	},
+
+	returnOrderTable : function(req, res){
+		var id = req.body.data;
+
+		orders.find({customer: id}, function(err, orders){
+			if(err){
+				res.send("no entries");
+			}else{
+				res.send(orders);
+			}
+		});
+	},
+
+	getOrderBox : function(req, res){
+		var id = req.body.data;
+
+		orders.findOne({_id : id}, function(err, order){
+			res.send(order);
+		});
 	},
 
 	logout : function(req, res){

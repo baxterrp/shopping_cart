@@ -1,13 +1,13 @@
 	<div class="row">
 		<span class="col-lg-12 drop-bottom">NOTE: The group selected is to change the group for the product and not to redirect to a new product group.</span> 
 	</div>
-	<form>
+	<form id="updateProductPage">
 		<div class="row">
 			<div class="col-lg-5">
-				<select class="form-control drop-bottom">
-					<option value={{firstGroup.id}}>{{firstGroup.name}}</option>
+				<select id="groupName" class="form-control drop-bottom">
+					<option value={{firstGroup.name}}>{{firstGroup.name}}</option>
 					{{#each notGroup}}
-					<option value={{id}}>{{name}}</option>
+					<option value={{name}}>{{name}}</option>
 					{{/each}}
 				</select>
 			</div>
@@ -16,7 +16,8 @@
 			<div class="col-lg-6">
 				<div class="form-group">
 				  <label for="usr">Product Name:</label>
-				  <input type="text" class="form-control" value="{{product.name}}">
+				  <input type="text" class="form-control" id="name" value="{{product.name}}">
+				  <input type="hidden" value="{{product.id}}" id="hidden" />
 				</div>
 			</div>
 		</div>
@@ -24,20 +25,20 @@
 				<div class="col-lg-6">
 					<div class="form-group">
 					  <label for="pwd">Product Price:</label>
-					  <input type="text" class="form-control" value="${{product.price}}">
+					  <input type="text" class="form-control" id="price" value="{{product.price}}">
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-6 drop-bottom">
 					<label>Product Image (leave this blank unless you want to update the image) </label>
-					<input type="file" class="form-control" />
+					<input type="file" id="file" class="form-control" />
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-6 drop-bottom">
 					<label>Product Description</label>
-					<textarea class="form-control" rows="4">{{product.description}}</textarea>
+					<textarea class="form-control" id="description" rows="4">{{product.description}}</textarea>
 				</div>
 			</div>
 			<div class="row">
