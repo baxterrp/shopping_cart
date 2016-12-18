@@ -1,24 +1,53 @@
 	var createTable = {},
 		cart = {},
 		launchDescription = {};
+		launchConfirmation = {};
 
 	createTable.mySelect = document.getElementsByTagName('select')[0];
 	cart.myCart = document.getElementById('cartCount');
 	cart.updateButton = document.getElementById('myTable');
 
+	launchConfirmation.showConfirmation = function(header, description, color){
+
+		if(header != undefined){
+			var confirmationBox = document.getElementById("confirmationBox");
+			confirmationBox.innerHTML = "<div class = 'row' style='width: 400px; background-color: " + color + "; color: white; height: 35px;'><div class='col-lg-12'><h5><strong>" + header + "</strong></h5></div></div>";
+			confirmationBox.innerHTML += "<div class = 'row' style ='width: 400px; padding-top: 15px;'><div class='col-lg-12'><p>" + description + "</p></div></div>";
+			confirmationBox.className = "show";
+		}
+	}	
+
+	launchConfirmation.hideConfirmation = function(){
+		console.log("hideConfirmation");
+		var okayButton = document.getElementById("closeConfirmation");
+		okayButton.addEventListener('click', function(e){
+			document.getElementById("confirmationBox").className = "hide";
+		});
+	}
+
 	if(document.getElementById("home_page")){
 		createTable.addTable = function(){
 			createTable.mySelect.addEventListener('change', function(){
-				
-				document.getElementById("myTable").innerHTML = "Loading table... Please wait...";
-
 				var data = createTable.mySelect.value;
-				Ajax.sendRequest('/create_table', function(res){
-					document.getElementById("myTable").innerHTML = res.responseText;
-					launchDescription.showDescription();
-			}, data);}, false);
+				if(data == 0){
+					launchConfirmation.showConfirmation("Error", "You must select a product group", "#d9534f");
+					var confirmationBox = document.getElementById("confirmationBox");
+					confirmationBox.innerHTML += "<div class='row' style='width: 400px;'><div class='col-lg-12'><input type='button' id='closeConfirmation' value='Okay' class='btn btn-primary'/>";
+					launchConfirmation.hideConfirmation();
+				}else{
+					
+					document.getElementById("myTable").innerHTML = "Loading table... Please wait...";
+
+					Ajax.sendRequest('/create_table', function(res){
+						document.getElementById("myTable").innerHTML = res.responseText;
+						launchDescription.showDescription();
+					}, data);
+				}
+			}, false);
 
 		}
+
+
 	
 		cart.addToCart = function(){
 			cart.updateButton.addEventListener('click', function(e){
@@ -35,6 +64,27 @@
 	
 		createTable.addTable();
 		cart.addToCart();
+	}
+
+	if(document.getElementById("login")){
+		var error = window.location.href.split("error=");
+		console.log(error);
+		if(error[1] == "invalid-user"){
+			launchConfirmation.showConfirmation("Incorrect Username and Password", "There are no records found matching those credentials", "#d9534f");
+			var confirmationBox = document.getElementById("confirmationBox");
+			confirmationBox.innerHTML += "<div class='row' style='width: 400px;'><div class='col-lg-12'><input type='button' id='closeConfirmation' value='Okay' class='btn btn-primary'/>";
+			launchConfirmation.hideConfirmation();
+		}
+	}
+
+	if(document.getElementById("registerForm")){
+		var error = window.location.href.split("error=");
+		if(error[1] == "taken"){
+			launchConfirmation.showConfirmation("Error", "We are sorry there is someone who already has that email adress", "#d9534f");
+			var confirmationBox = document.getElementById("confirmationBox");
+			confirmationBox.innerHTML += "<div class='row' style='width: 400px;'><div class='col-lg-12'><input type='button' id='closeConfirmation' value='Okay' class='btn btn-primary'/>";
+			launchConfirmation.hideConfirmation();
+		}
 	}
 
 	if(document.getElementById("cartTable")){
@@ -74,6 +124,15 @@
 
 				}
 			},false);
+
+			updateCart.updateButton.addEventListener('keyup', function(e){
+				if(e.target.type == 'text'){
+					if(e.target.value > 99)
+						e.target.value = 1;
+					if(isNaN(e.target.value))
+						e.target.value = 1;
+				}
+			}, false);
 		}
 
 		updateCart.addTable();
@@ -117,5 +176,5 @@
 		}
 	}
 
+	launchConfirmation.showConfirmation();
 	launchDescription.showDescription();
-

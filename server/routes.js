@@ -7,6 +7,14 @@ var express = require('express'),
 
 module.exports = function(app){
 
+	//setting up https
+	router.use(function(req, res, next){
+		if (req.secure) {
+			return next();
+		};
+		res.redirect('https://'+req.hostname+':'+app.get('port')+req.url);
+	});
+
 	//user GET
 	router.get('/login', user.login);
 	router.get('/', user.index);
@@ -44,6 +52,8 @@ module.exports = function(app){
 	router.post('/admin/add_group', admin.addGroupPost);
 	router.post('/admin/returnOrderTable', admin.returnOrderTable);
 	router.post('/admin/getOrderBox', admin.getOrderBox);
+	router.post('/admin/getIsActive', admin.getIsActive);
+	router.post('/admin/deleteProduct', admin.deleteProduct);
 
 	app.use(router);
 }

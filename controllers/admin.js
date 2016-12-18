@@ -20,6 +20,7 @@ module.exports = {
 		}else{
 			res.render('admin_login', {title: 'Shopping Cart - Admin Login', h1: 'Shopping Cart - Admin Login', h2: 'Admin Login', admin: true});
 		}
+
 	},
 
 	loginAdmin : function(req, res){
@@ -30,7 +31,9 @@ module.exports = {
 				req.session.success = "admin";
 				//req.session.user = {id: user.id, name: user.name, password: user.password, admin: true};
 				res.redirect('/admin');
-			};
+			}else{
+				res.redirect('/admin/login?error=invalid-user');
+			}
 		});
 	},
 
@@ -62,7 +65,8 @@ module.exports = {
 					documentData.price = req.body.price;
 					documentData.image = '/public/images/' + req.body.group + '/' + req.file.filename + '.jpg';
 					documentData.description = req.body.description;
-
+					documentData.isActive = true;
+						
 					var doc = new products(documentData);
 					doc.save(function(err){
 						if(err){
@@ -95,11 +99,17 @@ module.exports = {
 			if(err){
 				console.log(err);
 			}else if(products){
+				var count = 0;
 				var output = '<div class="row"><div class="col-lg-12"><form><table class="table table-bordered table-striped"><thead><tr><th>Product Name</th><th>Update Product</th><th>Delete Product</th></tr></thead><tbody>';
 				for(var i = 0; i < products.length; i++){
-					output += '<tr id="' + products[i].id + '"><td>' + products[i].name + '</td><td><a href="/admin/updateProductPage?id=' + products[i].id + '"><input type="button" class="btn btn-primary updateButton" value="Update Product" /></a></td><td><input type="button" class="btn btn-danger" value="Delete Product" /></td></tr>';					
+					if(products[i].isActive){
+						count++;
+						output += '<tr id="' + products[i].id + '"><td>' + products[i].name + '</td><td><a href="/admin/updateProductPage?id=' + products[i].id + '"><input type="button" class="btn btn-primary updateButton" value="Update Product" /></a></td><td><input type="button" class="btn btn-danger" value="Delete Product" /></td></tr>';					
+					}
 				}						
 				output += '</tbody></table></form></div></div>';
+				if(count < 1)
+					output = "No items in this category";
 			}
 			res.send(output);
 		});
@@ -155,7 +165,7 @@ module.exports = {
 				product.save(function(err){
 					if(err) throw err;
 
-					console.log("successfully updated");
+					res.send("successfully updated");
 				});
 			}
 		});
@@ -169,9 +179,10 @@ module.exports = {
 					if(err){
 						console.log(err);
 					}else if(product){
-						var path = '/public/images/' + product.group + '/' + product.image;
+						var path =  '.' + product.image;
 						fs.unlink(path, function(err){
 							if(err){
+								console.log("there was a problem");
 								console.log(err);
 							}else{
 								console.log("image removed");
@@ -186,7 +197,7 @@ module.exports = {
 						product.save(function(err){
 							if(err) throw err;
 
-							console.log("successfully updated with image");
+							res.send("successfully updated");
 						});
 					}
 				});
@@ -194,7 +205,18 @@ module.exports = {
 		}
 	},
 
+	deleteProduct : function(req, res){
+		var id = req.body.data;
 
+		products.findOne({_id: id}, function(err, product){
+			product.isActive = false;
+			product.save(function(err){
+				if(err) throw err;
+
+				res.send("successfully deleted");
+			});
+		});
+	},
 
 	addGroup : function(req, res){
 		if(req.session.success == 'admin'){
@@ -205,9 +227,11 @@ module.exports = {
 	},
 
 	addGroupPost: function(req, res){
+
+		var data = req.body.data.split('^^^');
 				
-		var group = req.body.group,
-			folder = req.body.folder;
+		var group = data[0];
+		var folder = data[1];
 			
 		var newGroup = new groups({
 			name: group
@@ -261,9 +285,15 @@ module.exports = {
 
 	getOrderBox : function(req, res){
 		var id = req.body.data;
-
 		orders.findOne({_id : id}, function(err, order){
 			res.send(order);
+		});
+	},
+
+	getIsActive : function(req, res){
+		var id = req.body.data;
+		products.find({_id: id}, function(err, product){
+			res.send(product[0].isActive);
 		});
 	},
 

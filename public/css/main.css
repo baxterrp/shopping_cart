@@ -19,8 +19,14 @@ transform: scale(-1, 1);}
   .red{color: red;}
 
 /*description box*/
-#descriptionBox{overflow: hidden; border: 1px solid #4285F4; padding: 0 15px 15px 15px; background-color: #fff; border-radius: 5px; width: 50%; position: fixed; top: 200px; left: 0; right: 0; margin-left: auto; margin-right: auto;}
+#descriptionBox, #confirmationBox{overflow: hidden; border: 1px solid #4285F4; padding: 0 15px 15px 15px; background-color: #fff; border-radius: 5px; width: 50%; position: fixed; top: 200px; left: 0; right: 0; margin-left: auto; margin-right: auto;}
 #descriptionBox img{width: 300px;}
-
+#confirmationBox{width: 400px;}
+/*#confirmationBox{overflow: hidden; border: 1px solid #4285F4; padding: 0 15px 15px 15px; border-radius: 5px; position: fixed; top: 200px;}*/
 .hide{display: none;}
 .show{display: block;}
+/*popover*/
+.popover-title{
+  color: white;
+  background-color: red;
+}

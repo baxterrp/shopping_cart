@@ -4,17 +4,17 @@
 			<div class="row">
 				<span class="col-lg-12 drop-bottom">All fields below are required. If you get an <span class="glyphicon glyphicon-exclamation-sign red" aria-hidden="true"></span> icon next to a field after clicking the "register and proceed to checkout" button, hover over the icon to see what the error is.</span> 
 			</div>
-		<form method="post" action="/register">
+		<form method="post" action="/register" id="registerForm">
 			<div class="row">
 				<div class="col-lg-6">
 					<div class="form-group">
-						<label>First Name: </label>
+						<label>First Name: </label>&nbsp;<span id="fnameSpan" class="hide glyphicon glyphicon-exclamation-sign red" title="Field Error" data-content="First Name must not be blank and must contain only letters"></span>
 						<input name="fname" id="fname" type="text" class="form-control" value = "">
 					</div>
 				</div>				
 				<div class="col-lg-6">
 					<div class="form-group">
-					  <label>Last Name: </label>
+					  <label>Last Name: </label>&nbsp;<span id="lnameSpan" class="hide glyphicon glyphicon-exclamation-sign red" data-toggle="popover" title="Field Error" data-content="Last Name must not be blank and must contain only letters"></span>
 					  <input name="lname" id = "lname" type="text" class="form-control" value = "">
 					</div>
 				</div>
@@ -22,25 +22,25 @@
 			<div class="row">
 				<div class="col-lg-5">
 					<div class="form-group">
-					  <label>Address: </label>
+					  <label>Address: </label>&nbsp;<span id="addressSpan" class="hide glyphicon glyphicon-exclamation-sign red" data-toggle="popover" title="Field Error" data-content="Address must not be blank and must contain only letters and numbers"></span>
 					  <input name="address" id="address" type="text" class="form-control" value = "">
 					</div>
 				</div>				
 				<div class="col-lg-4">
 					<div class="form-group">
-					  <label>City: </label>
+					  <label>City: </label>&nbsp;<span id="citySpan" class="hide glyphicon glyphicon-exclamation-sign red" data-toggle="popover" title="Field Error" data-content="City must not be blank and must contain only letters"></span>
 					  <input name = "city" id="city" type="text" class="form-control" value = "">
 					</div>
 				</div>				
 				<div class="col-lg-1">
 					<div class="form-group">
-					  <label>State: </label>
+					  <label>State: </label>&nbsp;<span id="stateSpan" class="hide glyphicon glyphicon-exclamation-sign red" data-toggle="popover" title="Field Error" data-content="State must not be blank and must be a valid state"></span>
 					  <input name = "state" id="state" type="text" class="form-control" value = "">
 					</div>
 				</div>				
 				<div class="col-lg-2">
 					<div class="form-group">
-					  <label>Zip Code: </label>
+					  <label>Zip Code: </label>&nbsp;<span id="zipSpan" class="hide glyphicon glyphicon-exclamation-sign red" data-toggle="popover" title="Field Error" data-content="Zip must not be blank and must be a 5 number zip code"></span>
 					  <input name = "zip" id="zip" type="text" class="form-control" value = "">
 					</div>
 				</div>
@@ -48,32 +48,32 @@
 			<div class="row">
 				<div class="col-lg-3">
 					<div class="form-group">
-					  <label>Phone: </label>
+					  <label>Phone: </label>&nbsp;<span id="phoneSpan" class="hide glyphicon glyphicon-exclamation-sign red" data-toggle="popover" title="Field Error" data-content="Phone must not be blank and must be in format 555-555-5555"></span>
 					  <input name = "phone" id="phone" type="text" class="form-control" value = "">
 					</div>
 				</div>				
 				<div class="col-lg-3">
 					<div class="form-group">
-					  <label>Email: </label>
+					  <label>Email: </label>&nbsp;<span id="emailSpan" class="hide glyphicon glyphicon-exclamation-sign red" data-toggle="popover" title="Field Error" data-content="Email must not be blank and must be a valid email address"></span>
 					  <input name = "email" id="email" type="text" class="form-control" value = "">
 					</div>
 				</div>				
 				<div class="col-lg-3">
 					<div class="form-group">
-					  <label>Password: </label>
+					  <label>Password: </label>&nbsp;<span id="passSpan" class="hide glyphicon glyphicon-exclamation-sign red" data-toggle="popover" title="Field Error" data-content="Password must not be blank"></span>
 					  <input name = "password" id="password" type="password" class="form-control" value = "">
 					</div>
 				</div>				
 				<div class="col-lg-3">
 					<div class="form-group">
-					  <label>Confirm Password: </label>
+					  <label>Confirm Password: </label>&nbsp;<span id="confirmSpan" class="hide glyphicon glyphicon-exclamation-sign red" data-toggle="popover" title="Field Error" data-content="Did not match password"></span>
 					  <input id="confirm" type="password" class="form-control" value = "">
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-6">
-					<input type="submit" value="Register and Proceed to Checkout" class="btn btn-success" onClick="return obj.init();" />
+					<input type="submit" value="Register and Proceed to Checkout" id="registerAccount" class="btn btn-success" />
 				</div>
 			</div>
 		</form>

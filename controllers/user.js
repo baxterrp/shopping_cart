@@ -1,7 +1,8 @@
 var groups = require('../models').Groups,
 	users = require('../models').Users,
 	products = require('../models').Products,
-	orders = require('../models').Orders;
+	orders = require('../models').Orders,
+	bcrypt = require('bcrypt');
 
 module.exports = {
 	
@@ -30,7 +31,7 @@ module.exports = {
 		var groupId = req.body.data;
 		
 		if(groupId === "0"){
-			res.send("");
+			res.send("Not a g");
 		}
 		else{
 				
@@ -39,15 +40,21 @@ module.exports = {
 								
 					var output = "<table id='productTable' class='table-bordered table-striped table'>";
 					output += "<thead><tr><th>Image</th><th>Product Name</th><th>Price</th><th>Description</th><th>Add to Cart</th></tr></thead><tbody>";
-					
+					var items = 0;
+
 					if(myItems.length === 0){
 						output = "There are no items in this category";
 					}else{
 						for(var i = 0; i < myItems.length; i++){
-							output += "<tr><td><image src = " + myItems[i].image + " width = '96' /></td><td>" + myItems[i].name + "</td><td>$" + myItems[i].price + "</td><td><input type='button' class='btn btn-primary' value='Description' /></td><td><input type='button' class='btn btn-success addToCart' id ='" + myItems[i].id + "'" + "value='Add to Cart' /></td></tr>";
+							if(myItems[i].isActive != false){
+								output += "<tr><td><image src = " + myItems[i].image + " width = '96' /></td><td>" + myItems[i].name + "</td><td>$" + myItems[i].price + "</td><td><input type='button' class='btn btn-primary' value='Description' /></td><td><input type='button' class='btn btn-success addToCart' id ='" + myItems[i].id + "'" + "value='Add to Cart' /></td></tr>";
+								items++;
+							}
 						}
-						
 						output += "</tbody>";
+						if(items == 0)
+							output = "There are no items in this category";	
+
 					}
 						res.send(output);
 				})
@@ -59,49 +66,76 @@ module.exports = {
 	updateCart : function(req, res){
 		var data = req.body.data.split(',');
 
+		//backend check for invalid entries
+		if(data[1] > 99)
+			data[1] = 1;
+		if(isNaN(data[1]))
+			data[1] = 1;
+
+		/*if(parseInt(data[1]) > 99 || isNaN(data[1]){
+			data[1] = 1;
+		}*/
+
 		products.findOne({_id: data[0]}, function(err, product){
-			
+
+			//using undefined/true for third peramater - true for updating quantity, false for incrementing by one
 			if(data[2] == 'undefined'){
 				var update = false;
 			}else if(data[2] == 'true'){
 				var update = true;
-			}					
-			//update cart information in session
-			//use flag for do while loop
+			}				
+
+			//using flag for do while and continuing search for item
 			var flag = true;
 			var len = req.session.cart.length;
-			var difference = 1;
+
 
 			do{
 				for(var i = 0; i < len; i++){
-					//if it's an update - get difference
-					if(update)
-						difference = parseInt(data[1]) - req.session.cart[i].quantity;
-
 					if(req.session.cart[i].id == data[0]){
-						req.session.cart[i].quantity+=difference;
-						req.session.count += difference;
+						if(update){
+							//if update - change quantity
+							req.session.cart[i].quantity = data[1];
+						}else{
+							//else increment by one
+							req.session.cart[i].quantity++;
+						}
 						req.session.cart[i].total = (req.session.cart[i].quantity * parseFloat(req.session.cart[i].price)).toFixed(2);
+						//item found - trigger flag
 						flag = false;
+
+						//if quantity set to 0 - remove item
 						if(req.session.cart[i].quantity == 0){
 							req.session.cart.splice(i, 1);
+
+							//reset loop max
 							len = req.session.cart.length;
 						}
 					}
 				}
-				//if not add it
+			
+				//if item wasn't found in for loop - add item - trigger flag
 				if(flag){
 					req.session.cart.push({id: data[0], quantity: 1, name: product.name, price: product.price, image: product.image, total: parseFloat(product.price).toFixed(2)});
 					req.session.count++;
 					flag = false;
 				}
+
+				//reset count - count each item with for loop using .quantity
+				req.session.count = 0;
+				for(var i = 0; i < req.session.cart.length; i++){
+					req.session.count += parseInt(req.session.cart[i].quantity);
+				}
 			}while(flag);
 
+			//calculate total
 			req.session.grand = 0;
 			for(var i = 0; i < req.session.cart.length; i++){
 				req.session.grand += parseFloat(req.session.cart[i].total);
 			}
 
+			//2 digit fix
+			//convert count to string for output
 			req.session.grand = req.session.grand.toFixed(2);
 			var count = req.session.count + "";
 			var output = count + '^^^' + JSON.stringify(req.session.cart);
@@ -134,28 +168,43 @@ module.exports = {
 
 	//POST registration
 	registerUser : function(req, res){
+		var saltRounds = 10;
+		
+		bcrypt.hash(req.body.password, saltRounds, function(err, hash){
 
-		var newUser = users({
-			name: req.body.email,
-			password: req.body.password,
-			isAdmin: false,
-			fname: req.body.fname,
-			lname: req.body.lname,
-			address: req.body.address,
-			city: req.body.city,
-			state: req.body.state,
-			zip: req.body.zip,
-			phone: req.body.phone
-		});
+			var newUser = users({
+				name: req.body.email,
+				password: hash,
+				isAdmin: false,
+				fname: req.body.fname,
+				lname: req.body.lname,
+				address: req.body.address,
+				city: req.body.city,
+				state: req.body.state,
+				zip: req.body.zip,
+				phone: req.body.phone
+			});
 
-		newUser.save(function(err){
-			if(err){
-				console.log(err);
-			}else{
-				console.log("User Added");
-				res.redirect('/login');
-			}
-
+			users.findOne({name: req.body.email}, function(err, user){
+				if(user){
+					res.redirect('/register?error=taken');
+				}
+				else{
+					newUser.save(function(err){
+						if(err){
+							console.log(err);
+						}else{
+							users.findOne({name: req.body.email}, function(err, user){
+								if(user){
+									req.session.success = "user";
+									req.session.user = {id: user.id, name: user.name, password: user.password, fname: user.fname, lname: user.lname, address: user.address, city: user.city, state: user.state, zip: user.zip}
+									res.redirect('/checkout');
+								};
+							});
+						}
+					});
+				}
+			});
 		});
 	},
 
@@ -166,14 +215,20 @@ module.exports = {
 
 	//POST login
 	loginUser : function(req, res){
-		users.findOne({name: req.body.email, password: req.body.password}, function(err, user){
-			if(err){
-				console.log("No user found by that name");
-			}else if(user){
-				req.session.success = "user";
-				req.session.user = {id: user.id, name: user.name, password: user.password, fname: user.fname, lname: user.lname, address: user.address, city: user.city, state: user.state, zip: user.zip}
-				res.redirect('/checkout');
-			};
+		users.findOne({name: req.body.email}, function(err, user){
+			if(user){
+				bcrypt.compare(req.body.password, user.password, function(err, response){
+					if(response){
+						req.session.success = "user";
+						req.session.user = {id: user.id, name: user.name, password: user.password, fname: user.fname, lname: user.lname, address: user.address, city: user.city, state: user.state, zip: user.zip}
+						res.redirect('/checkout');
+					}else{
+						res.redirect('/login?error=invalid-user');
+					}
+				});
+			}else{
+				res.redirect('/login?error=invalid-user');
+			}
 		});
 	},
 
